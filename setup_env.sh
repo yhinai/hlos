@@ -58,24 +58,6 @@ if ! conda info --envs | grep -q "hlos"; then
 fi
 conda activate hlos || echo "Please run 'conda activate hlos' manually after the script finishes"
 
-# Install and configure LibXML2
-echo "Setting up LibXML2..."
-cd ~/Desktop
-if [ ! -d "libxml2-2.12.9" ]; then
-    wget https://download.gnome.org/sources/libxml2/2.12/libxml2-2.12.9.tar.xz
-    tar -xvf libxml2-2.12.9.tar.xz
-    cd libxml2-2.12.9/
-    ./configure --prefix=$(pwd)
-    make
-    make install
-    
-    # Add library paths to .bashrc
-    add_to_bashrc "export LD_LIBRARY_PATH=~/Desktop/libxml2-2.12.9/lib:\$LD_LIBRARY_PATH"
-    add_to_bashrc "export PKG_CONFIG_PATH=~/Desktop/libxml2-2.12.9/lib/pkgconfig:\$PKG_CONFIG_PATH"
-else
-    echo "LibXML2 already installed, skipping installation"
-fi
-
 # Configure git
 echo "Configuring git..."
 git config --global http.followRedirects true
