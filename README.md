@@ -11,7 +11,7 @@ Before running the build system, ensure your environment meets all requirements 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/hlos.git
+git clone https://github.com/alhinai/hlos.git
 cd hlos
 ```
 
