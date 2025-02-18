@@ -13,11 +13,9 @@ Before running the build system, ensure your environment meets all requirements 
 ```bash
 git clone https://github.com/yhinai/hlos.git
 cd hlos
-```
 
-2. Set up the environment:
-```bash
-chmod 777 setup_env.sh
+# Set up the environment:
+chmod 777 setup_env.sh hlos.sh
 ./setup_env.sh
 ```
 
