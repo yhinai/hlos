@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# =============================================================================
+# =======================================
 # Environment Setup
-# =============================================================================
+# =======================================
 
 # Set up build environment paths
 STANDARD_OEM_DIR="${PWD}/matrix-la-1-0_ap_standard_oem"
@@ -23,22 +23,24 @@ git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro
 git config --global user.name "Your Name"
 git config --global user.email "your.email@example.com"
 
-# =============================================================================
+
+# =======================================
 # Download HLOS Chipcode
-# =============================================================================
+# =======================================
 git clone --depth 1 https://qpm-git.qualcomm.com/home2/git/google-inc/matrix-la-1-0_ap_standard_oem.git
 cd "${STANDARD_OEM_DIR}"
 
 # Set up sync script path
 chmod +x "$SYNC_SCRIPT"
 
-# =============================================================================
+
+# =======================================
 # Build HLOS
-# =============================================================================
+# =======================================
 
 # ---------[KERNEL.PLATFORM]--------- #
-cd "${KERNEL_DIR}"
 
+cd "${KERNEL_DIR}"
 # Sync Kernel
 "$SYNC_SCRIPT" \
     --jobs="$(nproc)" \
@@ -60,6 +62,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 # Build kernel with specific config
 ./kernel_platform/build_with_bazel.py -t niobe ALL
+
 
 # -----------[QSSI]----------- #
 
@@ -89,7 +92,9 @@ bash build.sh -j128 dist --qssi_only EXPERIMENTAL_USE_OPENJDK9=1.8
 # Restore git config
 git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro.org/
 
+
 # ----------[VENDOR]---------- #
+
 cd "${VENDOR_DIR}"
 
 # Sync Vendor
@@ -103,40 +108,29 @@ cd "${VENDOR_DIR}"
     --repo_branch=aosp-new/stable \
     --nhprop_chipcode_path="${STANDARD_OEM_DIR}"
 
-# Clean and prepare directories
-rm -rf "${VENDOR_DIR}/out" "${VENDOR_DIR}/kernel_platform"
-mkdir -p "${VENDOR_DIR}/out" "${VENDOR_DIR}/device/qcom/niobe-kernel"
-
 # Copy required files
-cp -r "${QSSI_DIR}"/* "${VENDOR_DIR}/"
-cp -r "${KERNEL_DIR}/kernel_platform" "${VENDOR_DIR}/"
+cp -prv "${QSSI_DIR}"/* "${VENDOR_DIR}/"
+rm -rf "${VENDOR_DIR}"/out
 
-# Create necessary directories
-mkdir -p "${VENDOR_DIR}/out/target/product/niobe/"{obj,vendor,tmp}
-mkdir -p "${VENDOR_DIR}/out/dist"
-mkdir -p "${VENDOR_DIR}/out/host/linux-x86"
+cp -prv "${KERNEL_DIR}"/kernel_platform/ "${VENDOR_DIR}/"
+rm -rf "${VENDOR_DIR}"/kernel_platform/out
 
-# Copy kernel artifacts and create symlinks
-cp -r "${KERNEL_DIR}/kernel_platform/out"/* "${VENDOR_DIR}/out/"
-ln -sf "${QSSI_DIR}/out/host" "${VENDOR_DIR}/out/"
+mkdir -p "${VENDOR_DIR}"/out/
+cp -r "${KERNEL_DIR}"/kernel_platform/out/* "${VENDOR_DIR}"/out/
 
-# Clean conflicting modules
-rm -rf "${VENDOR_DIR}/external/boringssl"
-rm -rf "${VENDOR_DIR}/prebuilts/clang/host/linux-x86/soong"
-
-# Copy Android.mk
-cp "${VENDOR_DIR}/LINUX/android/vendor/qcom/proprietary/prebuilt_HY11/Android.mk" \
-    "${VENDOR_DIR}/vendor/qcom/proprietary/prebuilt_HY11/Android.mk"
+mkdir -p "${VENDOR_DIR}"/vendor/qcom/proprietary/prebuilt_HY11/
+cp -r "${VENDOR_DIR}"/LINUX/android/vendor/qcom/proprietary/prebuilt_HY11/Android.mk "${VENDOR_DIR}"/vendor/qcom/proprietary/prebuilt_HY11/Android.mk
 
 # Build Vendor
 source build/envsetup.sh
 lunch niobe-userdebug
 ./kernel_platform/build/android/prepare_vendor.sh niobe gki
-bash build.sh dist --target_only
+bash build.sh -j128 dist --target_only
 
-# =============================================================================
+
+# =======================================
 # Generate super.img
-# =============================================================================
+# =======================================
 python vendor/qcom/opensource/core-utils/build/build_image_standalone.py \
     --image super \
     --qssi_build_path "${QSSI_DIR}" \
@@ -145,5 +139,6 @@ python vendor/qcom/opensource/core-utils/build/build_image_standalone.py \
     --target_lunch niobe \
     --output_ota \
     --skip_qiifa
+
 
 exit 0
