@@ -94,7 +94,8 @@ cd "${QSSI_WROKSPACE}"
 
 repo sync -j1 --fail-fast
 
-#cp -r "${VENDOR_DIR}/LINUX/android/vendor/"* "${VENDOR_WROKSPACE}/vendor/"
+# Copy all files and folders using rsync
+rsync -a --progress "${VENDOR_DIR}/LINUX/android/vendor/" "${VENDOR_WROKSPACE}/vendor/"
 
 rm -rf out
 make clean
@@ -125,15 +126,24 @@ cd "${VENDOR_WROKSPACE}"
 
 repo sync -j1 --fail-fast
 
+# Copy QSSI workspace to VENDOR workspace, excluding 'out' directory
+rsync -a --progress \
+    --exclude='out/' \
+    "${QSSI_WROKSPACE}/" "${VENDOR_WROKSPACE}/"
 
-# # Copy all contents from QSSI_WROKSPACE to VENDOR_WROKSPACE, excluding the 'out' directory
-# rsync -a --exclude='out/' "${QSSI_WROKSPACE}/" "${VENDOR_WROKSPACE}/"
+mkdir -p "${VENDOR_WROKSPACE}/kernel_platform"
 
-# # Copy the entire kernel_platform directory from KERNEL_WROKSPACE to VENDOR_WROKSPACE
-# cp -r "${KERNEL_WROKSPACE}"/kernel_platform "${VENDOR_WROKSPACE}/"
+# Copy kernel_platform directory to VENDOR workspace
+rsync -a --progress \
+    "${KERNEL_WROKSPACE}/kernel_platform/" \
+    "${VENDOR_WROKSPACE}/kernel_platform/"
 
-# # Move the out directory from kernel_platform to the root of KERNEL_WROKSPACE
-# mv "${KERNEL_WROKSPACE}"/kernel_platform/out "${KERNEL_WROKSPACE}/"
+# Copy VENDOR_WROKSPACE/kernel_platform/out directory to VENDOR_WROKSPACE/out
+# in a sence have it be from VENDOR_WROKSPACE}/kernel_platform/out to VENDOR_WROKSPACE}/out
+# I need to move it one way (no copying)
+mv "${VENDOR_WROKSPACE}/kernel_platform/out" "${VENDOR_WROKSPACE}/out"
+
+exit 0
 
 rm -rf out
 make clean
@@ -158,6 +168,5 @@ python vendor/qcom/opensource/core-utils/build/build_image_standalone.py \
     --target_lunch niobe \
     --output_ota \
     --skip_qiifa
-
 
 exit 0
