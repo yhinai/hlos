@@ -138,9 +138,6 @@ rsync -a --progress \
     "${KERNEL_WROKSPACE}/kernel_platform/" \
     "${VENDOR_WROKSPACE}/kernel_platform/"
 
-# Copy VENDOR_WROKSPACE/kernel_platform/out directory to VENDOR_WROKSPACE/out
-# in a sence have it be from VENDOR_WROKSPACE}/kernel_platform/out to VENDOR_WROKSPACE}/out
-# I need to move it one way (no copying)
 mv "${VENDOR_WROKSPACE}/kernel_platform/out" "${VENDOR_WROKSPACE}/out"
 
 exit 0
