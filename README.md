@@ -17,6 +17,8 @@ cd hlos
 # Set up the environment:
 chmod 777 setup_env.sh hlos.sh
 ./setup_env.sh
+source ~/.bashrc
+conda activate hlos
 ```
 
 ## Detailed Setup Guide
