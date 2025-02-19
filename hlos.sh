@@ -124,20 +124,18 @@ cd "${VENDOR_WROKSPACE}"
     --nhprop_chipcode_path="${STANDARD_OEM_DIR}"
 
 
-# # Copy required files
-# cp -r "${QSSI_WROKSPACE}"/* "${VENDOR_WROKSPACE}/"
-# rm -rf "${VENDOR_WROKSPACE}"/out
+# Copy all contents from QSSI_WROKSPACE to VENDOR_WROKSPACE, excluding the 'out' directory
+rsync -a --exclude='out/' "${QSSI_WROKSPACE}/" "${VENDOR_WROKSPACE}/"
 
-# cp -r "${KERNEL_WROKSPACE}"/kernel_platform/ "${VENDOR_WROKSPACE}/"
-# rm -rf "${VENDOR_WROKSPACE}"/kernel_platform/out
+# Copy the entire kernel_platform directory from KERNEL_WROKSPACE to VENDOR_WROKSPACE
+cp -r "${KERNEL_WROKSPACE}"/kernel_platform "${VENDOR_WROKSPACE}/"
 
-# mkdir -p "${VENDOR_WROKSPACE}"/out/
-# cp -r "${KERNEL_WROKSPACE}"/kernel_platform/out/* "${VENDOR_WROKSPACE}"/out/
+# Move the out directory from kernel_platform to the root of KERNEL_WROKSPACE
+mv "${KERNEL_WROKSPACE}"/kernel_platform/out "${KERNEL_WROKSPACE}/"
 
-# mkdir -p "${VENDOR_WROKSPACE}"/vendor/qcom/proprietary/prebuilt_HY11/
-# cp -r "${VENDOR_WROKSPACE}"/LINUX/android/vendor/qcom/proprietary/prebuilt_HY11/Android.mk "${VENDOR_WROKSPACE}"/vendor/qcom/proprietary/prebuilt_HY11/Android.mk
-# rm -rf out
-# make clean
+
+rm -rf out
+make clean
 
 # Build Vendor
 source build/envsetup.sh
