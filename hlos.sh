@@ -16,10 +16,6 @@ KERNEL_WROKSPACE="${STANDARD_OEM_DIR}/BUILD/KERNEL_WORKSPACE"
 QSSI_WROKSPACE="${STANDARD_OEM_DIR}/BUILD/QSSI_WORKSPACE"
 VENDOR_WROKSPACE="${STANDARD_OEM_DIR}/BUILD/VENDOR_WORKSPACE"
 
-mkdir -p "${KERNEL_WROKSPACE}"
-mkdir -p "${QSSI_WROKSPACE}"
-mkdir -p "${VENDOR_WROKSPACE}"
-
 SYNC_SCRIPT="${STANDARD_OEM_DIR}/LA.VENDOR.14.3.3.r1/LINUX/android/sync_snap_v2.sh"
 
 # Configure git
@@ -36,11 +32,17 @@ git config --global user.email "your.email@example.com"
 # Download HLOS Chipcode
 # =======================================
 git clone --depth 1 https://qpm-git.qualcomm.com/home2/git/google-inc/matrix-la-1-0_ap_standard_oem.git
-cd "${STANDARD_OEM_DIR}"
 
 # Set up sync script path
-chmod +x "$SYNC_SCRIPT"
+cd "${STANDARD_OEM_DIR}"
 
+chmod +x "$SYNC_SCRIPT"
+mkdir -p "${KERNEL_WROKSPACE}"
+mkdir -p "${QSSI_WROKSPACE}"
+mkdir -p "${VENDOR_WROKSPACE}"
+
+mv "${STANDARD_OEM_DIR}/VIDEO.XR.4.0.r1" "${STANDARD_OEM_DIR}/VIDEO.XR.4.0"
+mv "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0.r1" "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0"
 
 # =======================================
 # Build HLOS
@@ -91,8 +93,12 @@ cd "${QSSI_WROKSPACE}"
     --repo_branch=aosp-new/stable \
     --nhprop_chipcode_path="${STANDARD_OEM_DIR}"
 
+
+cp -r "${VENDOR_DIR}/LINUX/android/vendor/"* "${VENDOR_WROKSPACE}/vendor/"
+
 rm -rf out
 make clean
+
 
 source build/envsetup.sh
 lunch qssi_xrM-userdebug
@@ -116,6 +122,7 @@ cd "${VENDOR_WROKSPACE}"
     --repo_url=git@git.codelinaro.org:/clo/tools/repo.git \
     --repo_branch=aosp-new/stable \
     --nhprop_chipcode_path="${STANDARD_OEM_DIR}"
+
 
 # # Copy required files
 # cp -r "${QSSI_WROKSPACE}"/* "${VENDOR_WROKSPACE}/"
