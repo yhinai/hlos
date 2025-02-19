@@ -63,8 +63,7 @@ cd "${KERNEL_WROKSPACE}"
     --repo_branch=aosp-new/stable \
     --nhprop_chipcode_path="${STANDARD_OEM_DIR}"
 
-
-mkdir -p vendor/qcom/defs
+repo sync -j1 --fail-fast
 
 # Build Kernel
 bash kernel_platform/qcom/proprietary/prebuilt_HY11/vendorsetup.sh
@@ -93,8 +92,9 @@ cd "${QSSI_WROKSPACE}"
     --repo_branch=aosp-new/stable \
     --nhprop_chipcode_path="${STANDARD_OEM_DIR}"
 
+repo sync -j1 --fail-fast
 
-cp -r "${VENDOR_DIR}/LINUX/android/vendor/"* "${VENDOR_WROKSPACE}/vendor/"
+#cp -r "${VENDOR_DIR}/LINUX/android/vendor/"* "${VENDOR_WROKSPACE}/vendor/"
 
 rm -rf out
 make clean
@@ -123,16 +123,17 @@ cd "${VENDOR_WROKSPACE}"
     --repo_branch=aosp-new/stable \
     --nhprop_chipcode_path="${STANDARD_OEM_DIR}"
 
+repo sync -j1 --fail-fast
 
-# Copy all contents from QSSI_WROKSPACE to VENDOR_WROKSPACE, excluding the 'out' directory
-rsync -a --exclude='out/' "${QSSI_WROKSPACE}/" "${VENDOR_WROKSPACE}/"
 
-# Copy the entire kernel_platform directory from KERNEL_WROKSPACE to VENDOR_WROKSPACE
-cp -r "${KERNEL_WROKSPACE}"/kernel_platform "${VENDOR_WROKSPACE}/"
+# # Copy all contents from QSSI_WROKSPACE to VENDOR_WROKSPACE, excluding the 'out' directory
+# rsync -a --exclude='out/' "${QSSI_WROKSPACE}/" "${VENDOR_WROKSPACE}/"
 
-# Move the out directory from kernel_platform to the root of KERNEL_WROKSPACE
-mv "${KERNEL_WROKSPACE}"/kernel_platform/out "${KERNEL_WROKSPACE}/"
+# # Copy the entire kernel_platform directory from KERNEL_WROKSPACE to VENDOR_WROKSPACE
+# cp -r "${KERNEL_WROKSPACE}"/kernel_platform "${VENDOR_WROKSPACE}/"
 
+# # Move the out directory from kernel_platform to the root of KERNEL_WROKSPACE
+# mv "${KERNEL_WROKSPACE}"/kernel_platform/out "${KERNEL_WROKSPACE}/"
 
 rm -rf out
 make clean
