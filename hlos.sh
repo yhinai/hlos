@@ -92,9 +92,6 @@ repo sync -j1 --fail-fast
 # # Copy all files and folders using rsync
 # rsync -a --progress "${VENDOR_DIR}/LINUX/android/vendor/" "${QSSI_DIR}/vendor/"
 
-rm -rf out
-make clean
-
 source build/envsetup.sh
 lunch qssi_xrM-userdebug
 bash build.sh -j128 dist --qssi_only EXPERIMENTAL_USE_OPENJDK9=1.8
@@ -121,10 +118,8 @@ cd "${QSSI_DIR}"
 repo sync -j1 --fail-fast
 
 # Copy QSSI dir to VENDOR dir, excluding 'out' directory
-rsync -a --progress \
-    --exclude='out/' \
-    --exclude='.*/' \
-    --exclude='.*' \
+rsync -a --progress --exclude='out/' \
+    --exclude='.*/' --exclude='.*' \
     "${QSSI_DIR}/" "${VENDOR_DIR}/"
     
 mkdir -p "${VENDOR_DIR}/kernel_platform"
