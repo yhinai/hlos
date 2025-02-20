@@ -89,8 +89,8 @@ cd "${QSSI_DIR}"
 
 repo sync -j1 --fail-fast
 
-# Copy all files and folders using rsync
-rsync -a --progress "${VENDOR_DIR}/LINUX/android/vendor/" "${QSSI_DIR}/vendor/"
+# # Copy all files and folders using rsync
+# rsync -a --progress "${QSSI_DIR}/LINUX/android/vendor/" "${QSSI_DIR}/vendor/"
 
 source build/envsetup.sh
 lunch qssi_xrM-userdebug
@@ -102,12 +102,12 @@ git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro
 exit 0
 # ----------[VENDOR]---------- #
 
-cd "${QSSI_DIR}"
+cd "${VENDOR_DIR}"
 
 # Sync Vendor
 "$SYNC_SCRIPT" \
     --jobs="$(nproc)" \
-    --workspace_path="${QSSI_DIR}" \
+    --workspace_path="${VENDOR_DIR}" \
     --snap_release="${VENDOR_DIR}/LINUX/android/snap_release.xml" \
     --tree_type=vendor_techpack \
     --prop_opt=chipcode \
