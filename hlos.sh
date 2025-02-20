@@ -6,7 +6,9 @@
 
 # Set up build environment paths
 STANDARD_OEM_DIR="${PWD}/matrix-la-1-0_ap_standard_oem"
-FIX_DUPLICATE_SCRIPT="${PWD}/fix_duplicate_modules.py"
+
+REQUIRED_MODULES_SCRIPT="generate_prebuilts.sh"
+REQUIRED_MODULES_DIR="${PWD}/${REQUIRED_MODULES_SCRIPT}"
 
 KERNEL_DIR="${STANDARD_OEM_DIR}/KERNEL.PLATFORM.3.0.r13"
 QSSI_DIR="${STANDARD_OEM_DIR}/LA.QSSI.14.0.r1"
@@ -100,7 +102,6 @@ rsync -a --progress "${VENDOR_DIR}/LINUX/android/vendor/" "${VENDOR_WROKSPACE}/v
 rm -rf out
 make clean
 
-
 source build/envsetup.sh
 lunch qssi_xrM-userdebug
 bash build.sh -j128 dist --qssi_only EXPERIMENTAL_USE_OPENJDK9=1.8
@@ -145,13 +146,17 @@ exit 0
 rm -rf out
 make clean
 
+mv REQUIRED_MODULES_DIR .
+chmod 777 REQUIRED_MODULES_SCRIPT
+./${REQUIRED_MODULES_SCRIPT}
+
 # Build Vendor
 source build/envsetup.sh
 lunch niobe-userdebug
 ./kernel_platform/build/android/prepare_vendor.sh niobe gki
 bash build.sh -j128 dist --target_only
 
-
+exit 0
 # =======================================
 # Generate super.img
 # =======================================
