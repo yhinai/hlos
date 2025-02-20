@@ -129,7 +129,7 @@ rsync -a --progress \
     "${KERNEL_DIR}/kernel_platform/" \
     "${VENDOR_DIR}/kernel_platform/"
 
-mv "${VENDOR_WROKSPACE}/kernel_platform/out" "${VENDOR__DIR}/out"
+mv "${VENDOR_DIR}/kernel_platform/out" "${VENDOR__DIR}/out"
 
 exit 0
 
@@ -147,13 +147,13 @@ exit 0
 # =======================================
 # Generate super.img
 # =======================================
-cd "${VENDOR_WROKSPACE}"
+cd "${VENDOR_DIR}"
 
 python vendor/qcom/opensource/core-utils/build/build_image_standalone.py \
     --image super \
     --qssi_build_path "${QSSI_DIR}" \
-    --target_build_path "${VENDOR_WROKSPACE}" \
-    --merged_build_path "${VENDOR_WROKSPACE}" \
+    --target_build_path "${VENDOR_DIR}" \
+    --merged_build_path "${VENDOR_DIR}" \
     --target_lunch niobe \
     --output_ota \
     --skip_qiifa
