@@ -74,7 +74,3 @@ echo "Java version:"
 java -version
 echo -e "\nPython version:"
 python --version
-echo -e "\nLibXML2 version:"
-pkg-config --modversion libxml-2.0
-
-echo -e "\nSetup complete! Please restart your terminal or run 'source ~/.bashrc' to apply all changes."
