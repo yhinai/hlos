@@ -99,7 +99,7 @@ bash build.sh -j$(nproc) dist --qssi_only EXPERIMENTAL_USE_OPENJDK9=1.8
 # Restore git config
 git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro.org/
 
-
+exit 0
 # ----------[VENDOR]---------- #
 
 cd "${QSSI_DIR}"
