@@ -14,10 +14,6 @@ KERNEL_DIR="${STANDARD_OEM_DIR}/KERNEL.PLATFORM.3.0.r13"
 QSSI_DIR="${STANDARD_OEM_DIR}/LA.QSSI.14.0.r1"
 VENDOR_DIR="${STANDARD_OEM_DIR}/LA.VENDOR.14.3.3.r1"
 
-KERNEL_WROKSPACE="${STANDARD_OEM_DIR}/KERNEL_WORKSPACE"
-QSSI_WROKSPACE="${STANDARD_OEM_DIR}/QSSI_WORKSPACE"
-VENDOR_WROKSPACE="${STANDARD_OEM_DIR}/VENDOR_WORKSPACE"
-
 SYNC_SCRIPT="${STANDARD_OEM_DIR}/LA.VENDOR.14.3.3.r1/LINUX/android/sync_snap_v2.sh"
 
 # Configure git
@@ -39,9 +35,6 @@ git clone --depth 1 https://qpm-git.qualcomm.com/home2/git/google-inc/matrix-la-
 cd "${STANDARD_OEM_DIR}"
 
 chmod +x "$SYNC_SCRIPT"
-mkdir -p "${KERNEL_WROKSPACE}"
-mkdir -p "${QSSI_WROKSPACE}"
-mkdir -p "${VENDOR_WROKSPACE}"
 
 mv "${STANDARD_OEM_DIR}/VIDEO.XR.4.0.r1" "${STANDARD_OEM_DIR}/VIDEO.XR.4.0"
 mv "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0.r1" "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0"
@@ -52,12 +45,12 @@ mv "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0.r1" "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0
 
 # ---------[KERNEL.PLATFORM]--------- #
 
-cd "${KERNEL_WROKSPACE}"
+cd "${KERNEL_DIR}"
 
 # Sync Kernel
 "$SYNC_SCRIPT" \
     --jobs="$(nproc)" \
-    --workspace_path="${KERNEL_WROKSPACE}" \
+    --workspace_path="${KERNEL_DIR}" \
     --snap_release="${KERNEL_DIR}/kernel_platform/snap_release.xml" \
     --tree_type=KERNEL.PLATFORM.3.0.r13 \
     --prop_opt=chipcode \
@@ -83,10 +76,10 @@ export PATH=$JAVA_HOME/bin:$PATH
 git config --global --unset url.git@git.codelinaro.org:.insteadOf
 
 # Sync QSSI
-cd "${QSSI_WROKSPACE}"
+cd "${QSSI_DIR}"
 "$SYNC_SCRIPT" \
     --jobs="$(nproc)" \
-    --workspace_path="${QSSI_WROKSPACE}" \
+    --workspace_path="${QSSI_DIR}" \
     --snap_release="${QSSI_DIR}/LINUX/android/snap_release.xml" \
     --tree_type=LA.QSSI.14.0.r1 \
     --prop_opt=chipcode \
@@ -97,7 +90,7 @@ cd "${QSSI_WROKSPACE}"
 repo sync -j1 --fail-fast
 
 # Copy all files and folders using rsync
-rsync -a --progress "${VENDOR_DIR}/LINUX/android/vendor/" "${VENDOR_WROKSPACE}/vendor/"
+rsync -a --progress "${VENDOR_DIR}/LINUX/android/vendor/" "${QSSI_DIR}/vendor/"
 
 rm -rf out
 make clean
@@ -112,12 +105,12 @@ git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro
 
 # ----------[VENDOR]---------- #
 
-cd "${VENDOR_WROKSPACE}"
+cd "${QSSI_DIR}"
 
 # Sync Vendor
 "$SYNC_SCRIPT" \
     --jobs="$(nproc)" \
-    --workspace_path="${VENDOR_WROKSPACE}" \
+    --workspace_path="${QSSI_DIR}" \
     --snap_release="${VENDOR_DIR}/LINUX/android/snap_release.xml" \
     --tree_type=vendor_techpack \
     --prop_opt=chipcode \
@@ -127,34 +120,31 @@ cd "${VENDOR_WROKSPACE}"
 
 repo sync -j1 --fail-fast
 
-# Copy QSSI workspace to VENDOR workspace, excluding 'out' directory
+# Copy QSSI dir to VENDOR dir, excluding 'out' directory
 rsync -a --progress \
     --exclude='out/' \
-    "${QSSI_WROKSPACE}/" "${VENDOR_WROKSPACE}/"
+    "${QSSI_DIR}/" "${VENDOR_DIR}/"
 
-mkdir -p "${VENDOR_WROKSPACE}/kernel_platform"
+mkdir -p "${VENDOR_DIR}/kernel_platform"
 
-# Copy kernel_platform directory to VENDOR workspace
+# Copy kernel_platform directory to VENDOR dir
 rsync -a --progress \
-    "${KERNEL_WROKSPACE}/kernel_platform/" \
-    "${VENDOR_WROKSPACE}/kernel_platform/"
+    "${KERNEL_DIR}/kernel_platform/" \
+    "${VENDOR_DIR}/kernel_platform/"
 
-mv "${VENDOR_WROKSPACE}/kernel_platform/out" "${VENDOR_WROKSPACE}/out"
+mv "${VENDOR_WROKSPACE}/kernel_platform/out" "${VENDOR__DIR}/out"
 
 exit 0
 
-rm -rf out
-make clean
-
-mv "${REQUIRED_MODULES_DIR}" "${VENDOR_WROKSPACE}/"
-chmod 777 ${REQUIRED_MODULES_SCRIPT}
-./${REQUIRED_MODULES_SCRIPT}
+# mv "${REQUIRED_MODULES_DIR}" "${VENDOR__DIR}/"
+# chmod 777 ${REQUIRED_MODULES_SCRIPT}
+# ./${REQUIRED_MODULES_SCRIPT}
 
 # Build Vendor
 source build/envsetup.sh
 lunch niobe-userdebug
 ./kernel_platform/build/android/prepare_vendor.sh niobe gki
-bash build.sh -j128 dist --target_only
+bash build.sh -j128 dist --target_only BUILD_BROKEN_MISSING_REQUIRED_MODULES=true
 
 exit 0
 # =======================================
@@ -164,7 +154,7 @@ cd "${VENDOR_WROKSPACE}"
 
 python vendor/qcom/opensource/core-utils/build/build_image_standalone.py \
     --image super \
-    --qssi_build_path "${QSSI_WROKSPACE}" \
+    --qssi_build_path "${QSSI_DIR}" \
     --target_build_path "${VENDOR_WROKSPACE}" \
     --merged_build_path "${VENDOR_WROKSPACE}" \
     --target_lunch niobe \
