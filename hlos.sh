@@ -89,8 +89,8 @@ cd "${QSSI_DIR}"
 
 repo sync -j1 --fail-fast
 
-# Copy all files and folders using rsync
-rsync -a --progress "${VENDOR_DIR}/LINUX/android/vendor/" "${QSSI_DIR}/vendor/"
+# # Copy all files and folders using rsync
+# rsync -a --progress "${VENDOR_DIR}/LINUX/android/vendor/" "${QSSI_DIR}/vendor/"
 
 rm -rf out
 make clean
