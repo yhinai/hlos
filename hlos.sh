@@ -129,7 +129,7 @@ rsync -a --progress \
     "${KERNEL_DIR}/kernel_platform/" \
     "${VENDOR_DIR}/kernel_platform/"
 
-mv "${VENDOR_DIR}/kernel_platform/out" "${VENDOR__DIR}/out"
+mv "${VENDOR_DIR}/kernel_platform/out" "${VENDOR_DIR}/out"
 
 exit 0
 
