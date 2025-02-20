@@ -123,8 +123,10 @@ repo sync -j1 --fail-fast
 # Copy QSSI dir to VENDOR dir, excluding 'out' directory
 rsync -a --progress \
     --exclude='out/' \
+    --exclude='.*/' \
+    --exclude='.*' \
     "${QSSI_DIR}/" "${VENDOR_DIR}/"
-
+    
 mkdir -p "${VENDOR_DIR}/kernel_platform"
 
 # Copy kernel_platform directory to VENDOR dir
