@@ -1,4 +1,4 @@
-#!/bin/bash
+#ƒ!/bin/bash
 
 # =======================================
 # Environment Setup
@@ -94,7 +94,7 @@ rsync -a --progress "${VENDOR_DIR}/LINUX/android/vendor/" "${QSSI_DIR}/vendor/"
 
 source build/envsetup.sh
 lunch qssi_xrM-userdebug
-bash build.sh -j128 dist --qssi_only EXPERIMENTAL_USE_OPENJDK9=1.8
+bash build.sh -j$(nproc) dist --qssi_only EXPERIMENTAL_USE_OPENJDK9=1.8
 
 # Restore git config
 git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro.org/
@@ -141,7 +141,7 @@ exit 0
 source build/envsetup.sh
 lunch niobe-userdebug
 ./kernel_platform/build/android/prepare_vendor.sh niobe gki
-bash build.sh -j128 dist --target_only BUILD_BROKEN_MISSING_REQUIRED_MODULES=true
+bash build.sh -j$(nproc) dist --target_only BUILD_BROKEN_MISSING_REQUIRED_MODULES=true
 
 exit 0
 # =======================================
