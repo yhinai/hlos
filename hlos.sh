@@ -1,4 +1,4 @@
-#ƒ!/bin/bash
+#!/bin/bash
 
 # =======================================
 # Environment Setup
