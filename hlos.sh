@@ -14,13 +14,13 @@ KERNEL_DIR="${STANDARD_OEM_DIR}/KERNEL.PLATFORM.3.0.r13"
 QSSI_DIR="${STANDARD_OEM_DIR}/LA.QSSI.14.0.r1"
 VENDOR_DIR="${STANDARD_OEM_DIR}/LA.VENDOR.14.3.3.r1"
 
-KERNEL_WORKSHOP="${KERNEL_DIR}/kernel_platform"
-QSSI_WORKSHOP="${QSSI_DIR}/LINUX/android"
-VENDOR_WORKSHOP="${VENDOR_DIR}/LINUX/android"
+SYNC_SCRIPT_KERNEL="${KERNEL_DIR}/kernel_platform/sync_snap_v2.sh"
+SYNC_SCRIPT_QSSI="${QSSI_WORKSHOP}/LINUX/android/sync_snap_v2.sh"
+SYNC_SCRIPT_VENDOR="${VENDOR_WORKSHOP}/LINUX/android/sync_snap_v2.sh"
 
-SYNC_SCRIPT_KERNEL="${KERNEL_WORKSHOP}/sync_snap_v2.sh"
-SYNC_SCRIPT_QSSI="${QSSI_WORKSHOP}/sync_snap_v2.sh"
-SYNC_SCRIPT_VENDOR="${VENDOR_WORKSHOP}/sync_snap_v2.sh"
+KERNEL_WORKSHOP="${STANDARD_OEM_DIR}/A_KERNEL.PLATFORM"
+QSSI_WORKSHOP="${STANDARD_OEM_DIR}/A_QSSI"
+VENDOR_WORKSHOP="${STANDARD_OEM_DIR}/A_VENDOR"
 
 # Configure git
 git config --global http.followRedirects true
@@ -44,8 +44,12 @@ chmod +x "$SYNC_SCRIPT_KERNEL"
 chmod +x "$SYNC_SCRIPT_QSSI"
 chmod +x "$SYNC_SCRIPT_VENDOR"
 
-mv "${STANDARD_OEM_DIR}/VIDEO.XR.4.0.r1" "${STANDARD_OEM_DIR}/VIDEO.XR.4.0"
-mv "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0.r1" "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0"
+mkdir -p KERNEL_WORKSHOP
+mkdir -p QSSI_WORKSHOP
+mkdir -p VENDOR_WORKSHOP
+
+# mv "${STANDARD_OEM_DIR}/VIDEO.XR.4.0.r1" "${STANDARD_OEM_DIR}/VIDEO.XR.4.0"
+# mv "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0.r1" "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0"
 
 # =======================================
 # Build HLOS
@@ -53,12 +57,12 @@ mv "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0.r1" "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0
 
 # ---------[KERNEL.PLATFORM]--------- #
 
-cd "${KERNEL_DIR}"
+cd "${KERNEL_WORKSHOP}"
 
 # Sync Kernel
 "$SYNC_SCRIPT_KERNEL" \
     --jobs="$(nproc)" \
-    --workspace_path="${KERNEL_DIR}" \
+    --workspace_path="${KERNEL_WORKSHOP}" \
     --snap_release="${KERNEL_WORKSHOP}/snap_release.xml" \
     --tree_type=KERNEL.PLATFORM.3.0.r13 \
     --prop_opt=chipcode \
@@ -136,14 +140,14 @@ mkdir -p "${VENDOR_WORKSHOP}/kernel_platform"
 
 # Copy kernel_platform directory to VENDOR dir
 rsync -a --progress \
-    "${KERNEL_DIR}/kernel_platform/" \
+    "${KERNEL_WORKSHOP}/kernel_platform/" \
     "${VENDOR_WORKSHOP}/kernel_platform/"
 
 mv "${VENDOR_WORKSHOP}/kernel_platform/out" "${VENDOR_WORKSHOP}/out"
 
 exit 0
 
-# mv "${REQUIRED_MODULES_DIR}" "${VENDOR__DIR}/"
+# mv "${REQUIRED_MODULES_DIR}" "${VENDOR_DIR}/"
 # chmod 777 ${REQUIRED_MODULES_SCRIPT}
 # ./${REQUIRED_MODULES_SCRIPT}
 
