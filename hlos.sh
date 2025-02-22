@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Setup logging to file
+exec 1> >(tee -a "log.txt") 2>&1
+echo "=== Build Script Started at $(date) ==="
+
 # =======================================
 # Environment Setup
 # =======================================
@@ -38,7 +42,6 @@ setup_environment() {
 # =======================================
 
 download_hlos() {
-
     # Check if directory already exists
     if [ ! -d "matrix-la-1-0_ap_standard_oem" ]; then
         echo "Downloading HLOS Chipcode..."
@@ -53,7 +56,6 @@ download_hlos() {
     mkdir -p "$KERNEL_WORKSHOP"
     mkdir -p "$QSSI_WORKSHOP"
     mkdir -p "$VENDOR_WORKSHOP"
-
 }
 
 # =======================================
@@ -63,7 +65,6 @@ download_hlos() {
 sync_kernel() {
     cd "${KERNEL_WORKSHOP}"
     
-    echo "Syncing Kernel..."
     "$SYNC_SCRIPT_KERNEL" \
         --jobs="$(nproc)" \
         --workspace_path="${KERNEL_WORKSHOP}" \
@@ -113,14 +114,11 @@ build_qssi() {
     git config --global --unset url.git@git.codelinaro.org:.insteadOf
     cd "${QSSI_WORKSHOP}"
 
-#     rsync -a --progress "${QSSI_DIR}/LINUX/android/vendor/" "${QSSI_DIR}/vendor/"
-
     source build/envsetup.sh
     lunch qssi_xrM-userdebug
 
     bash build.sh -j"$(nproc)" dist --qssi_only EXPERIMENTAL_USE_OPENJDK9=1.8
 
-    # Restore git config
     git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro.org/
 }
 
@@ -142,7 +140,6 @@ sync_vendor() {
         --nhprop_chipcode_path="${STANDARD_OEM_DIR}"
 
     repo sync -j1 --fail-fast
-    
 }
 
 build_vendor() {
@@ -175,7 +172,6 @@ generate_super_image() {
 # =======================================
 
 main() {
-
     # 1. Setup environment
     setup_environment
     
@@ -191,7 +187,8 @@ main() {
     build_qssi
     
     # 5. Vendor: sync and build
-    sync_vendor && build_vendor
+    sync_vendor
+    build_vendor
     
     # 6. Generate image
     generate_super_image
@@ -199,3 +196,4 @@ main() {
 
 # Execute main function
 main
+
