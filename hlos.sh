@@ -18,7 +18,7 @@ SYNC_SCRIPT_KERNEL="${KERNEL_DIR}/kernel_platform/sync_snap_v2.sh"
 SYNC_SCRIPT_QSSI="${QSSI_WORKSHOP}/LINUX/android/sync_snap_v2.sh"
 SYNC_SCRIPT_VENDOR="${VENDOR_WORKSHOP}/LINUX/android/sync_snap_v2.sh"
 
-KERNEL_WORKSHOP="${STANDARD_OEM_DIR}/A_KERNEL.PLATFORM"
+KERNEL_WORKSHOP="${STANDARD_OEM_DIR}/A_KERNEL"
 QSSI_WORKSHOP="${STANDARD_OEM_DIR}/A_QSSI"
 VENDOR_WORKSHOP="${STANDARD_OEM_DIR}/A_VENDOR"
 
@@ -44,9 +44,9 @@ chmod +x "$SYNC_SCRIPT_KERNEL"
 chmod +x "$SYNC_SCRIPT_QSSI"
 chmod +x "$SYNC_SCRIPT_VENDOR"
 
-mkdir -p KERNEL_WORKSHOP
-mkdir -p QSSI_WORKSHOP
-mkdir -p VENDOR_WORKSHOP
+mkdir -p $KERNEL_WORKSHOP
+mkdir -p $QSSI_WORKSHOP
+mkdir -p $VENDOR_WORKSHOP
 
 # mv "${STANDARD_OEM_DIR}/VIDEO.XR.4.0.r1" "${STANDARD_OEM_DIR}/VIDEO.XR.4.0"
 # mv "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0.r1" "${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0"
@@ -63,7 +63,7 @@ cd "${KERNEL_WORKSHOP}"
 "$SYNC_SCRIPT_KERNEL" \
     --jobs="$(nproc)" \
     --workspace_path="${KERNEL_WORKSHOP}" \
-    --snap_release="${KERNEL_WORKSHOP}/snap_release.xml" \
+    --snap_release="${KERNEL_DIR}/kernel_platform/snap_release.xml" \
     --tree_type=KERNEL.PLATFORM.3.0.r13 \
     --prop_opt=chipcode \
     --repo_url=git@git.codelinaro.org:/clo/tools/repo.git \
@@ -71,6 +71,8 @@ cd "${KERNEL_WORKSHOP}"
     --nhprop_chipcode_path="${STANDARD_OEM_DIR}"
 
 repo sync -j1 --fail-fast
+
+exit 0
 
 # Build Kernel
 bash kernel_platform/qcom/proprietary/prebuilt_HY11/vendorsetup.sh
