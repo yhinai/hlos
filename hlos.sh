@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Setup logging to file
-exec 1> >(tee -a "log.txt") 2>&1
-echo "=== Build Script Started at $(date) ==="
-
 # =======================================
 # Environment Setup
 # =======================================
@@ -143,6 +139,8 @@ sync_vendor() {
 }
 
 build_vendor() {
+    cd "${VENDOR_WORKSHOP}"
+    
     source build/envsetup.sh
     lunch qssi_xrM-userdebug
 
