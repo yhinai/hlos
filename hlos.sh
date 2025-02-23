@@ -4,34 +4,32 @@
 # Environment Setup
 # =======================================
 
-setup_environment() {
-    # Set up build environment paths
-    STANDARD_OEM_DIR="${PWD}/matrix-la-1-0_ap_standard_oem"
-    
-    REQUIRED_MODULES_SCRIPT="generate_prebuilts.sh"
-    REQUIRED_MODULES_DIR="${PWD}/${REQUIRED_MODULES_SCRIPT}"
-    
-    KERNEL_DIR="${STANDARD_OEM_DIR}/KERNEL.PLATFORM.3.0.r13"
-    QSSI_DIR="${STANDARD_OEM_DIR}/LA.QSSI.14.0.r1"
-    VENDOR_DIR="${STANDARD_OEM_DIR}/LA.VENDOR.14.3.3.r1"
-    
-    SYNC_SCRIPT_KERNEL="${KERNEL_DIR}/kernel_platform/sync_snap_v2.sh"
-    SYNC_SCRIPT_QSSI="${QSSI_DIR}/LINUX/android/sync_snap_v2.sh"
-    SYNC_SCRIPT_VENDOR="${VENDOR_DIR}/LINUX/android/sync_snap_v2.sh"
-    
-    KERNEL_WORKSHOP="${STANDARD_OEM_DIR}/AA1_KERNEL"
-    QSSI_WORKSHOP="${STANDARD_OEM_DIR}/AA2_QSSI"
-    VENDOR_WORKSHOP="${STANDARD_OEM_DIR}/AA3_VENDOR"
+STANDARD_OEM_DIR="${PWD}/matrix-la-1-0_ap_standard_oem"
 
-    # Configure git
-    git config --global http.followRedirects true
-    git config --global pack.threads "$(nproc)"
-    git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro.org/
+REQUIRED_MODULES_SCRIPT="generate_prebuilts.sh"
+REQUIRED_MODULES_DIR="${PWD}/${REQUIRED_MODULES_SCRIPT}"
 
-    # Set git user info
-    git config --global user.name "Your Name"
-    git config --global user.email "your.email@example.com"
-}
+KERNEL_DIR="${STANDARD_OEM_DIR}/KERNEL.PLATFORM.3.0.r13"
+QSSI_DIR="${STANDARD_OEM_DIR}/LA.QSSI.14.0.r1"
+VENDOR_DIR="${STANDARD_OEM_DIR}/LA.VENDOR.14.3.3.r1"
+
+SYNC_SCRIPT_KERNEL="${KERNEL_DIR}/kernel_platform/sync_snap_v2.sh"
+SYNC_SCRIPT_QSSI="${QSSI_DIR}/LINUX/android/sync_snap_v2.sh"
+SYNC_SCRIPT_VENDOR="${VENDOR_DIR}/LINUX/android/sync_snap_v2.sh"
+
+KERNEL_WORKSHOP="${STANDARD_OEM_DIR}/AA1_KERNEL"
+QSSI_WORKSHOP="${STANDARD_OEM_DIR}/AA2_QSSI"
+VENDOR_WORKSHOP="${STANDARD_OEM_DIR}/AA3_VENDOR"
+
+# Configure git
+git config --global http.followRedirects true
+git config --global pack.threads "$(nproc)"
+git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro.org/
+
+# Set git user info
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+
 
 # =======================================
 # Download HLOS Chipcode
@@ -170,28 +168,24 @@ generate_super_image() {
 # =======================================
 
 main() {
-    # 1. Setup environment
-    setup_environment
     
-    # 2. Download HLOS
+    # 1. Download HLOS
     download_hlos
 
-    # 3. Kernel: sync and build
+    # 2. Kernel: sync and build
     sync_kernel
     build_kernel
     
-    # 4. QSSI: sync and build
+    # 3. QSSI: sync and build
     sync_qssi
     build_qssi
     
-    # 5. Vendor: sync and build
+    # 4. Vendor: sync and build
     sync_vendor
     build_vendor
     
-    # 6. Generate image
+    # 5. Generate image
     generate_super_image
 }
 
-# Execute main function
 main
-
