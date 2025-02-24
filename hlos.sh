@@ -138,17 +138,17 @@ sync_vendor() {
 
 copy_files_vendor() {
 
+    # Copy kernel_platform directory to QSSI dir
+    mkdir -p "${QSSI_WORKSHOP}/kernel_platform"
+    
+    rsync -a --progress \
+        "${KERNEL_WORKSHOP}/kernel_platform/" \
+        "${QSSI_WORKSHOP}/kernel_platform/"
+
     # Copy QSSI dir to VENDOR dir, excluding 'out' directory
     rsync -a --progress --exclude='out/' \
         --exclude='.*/' --exclude='.*' \
         "${QSSI_WORKSHOP}/" "${VENDOR_WORKSHOP}/"
-
-    mkdir -p "${VENDOR_WORKSHOP}/kernel_platform"
-
-    # Copy kernel_platform directory to VENDOR dir
-    rsync -a --progress \
-        "${KERNEL_WORKSHOP}/kernel_platform/" \
-        "${VENDOR_WORKSHOP}/kernel_platform/"
 
     mv "${VENDOR_WORKSHOP}/kernel_platform/out" "${VENDOR_WORKSHOP}/out"
 
