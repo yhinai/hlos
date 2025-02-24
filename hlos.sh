@@ -17,9 +17,9 @@ SYNC_SCRIPT_KERNEL="${KERNEL_DIR}/kernel_platform/sync_snap_v2.sh"
 SYNC_SCRIPT_QSSI="${QSSI_DIR}/LINUX/android/sync_snap_v2.sh"
 SYNC_SCRIPT_VENDOR="${VENDOR_DIR}/LINUX/android/sync_snap_v2.sh"
 
-KERNEL_WORKSHOP="${STANDARD_OEM_DIR}/AA1_KERNEL"
-QSSI_WORKSHOP="${STANDARD_OEM_DIR}/AA2_QSSI"
-VENDOR_WORKSHOP="${STANDARD_OEM_DIR}/AA3_VENDOR"
+KERNEL_WORKSHOP="${KERNEL_DIR}/kernel_platform"
+QSSI_WORKSHOP="${QSSI_DIR}/LINUX/android"
+VENDOR_WORKSHOP="${VENDOR_DIR}/LINUX/android"
 
 # Configure git
 git config --global http.followRedirects true
@@ -122,7 +122,7 @@ build_qssi() {
 
 sync_vendor() {
     cd "${VENDOR_WORKSHOP}"
-    
+
     "$SYNC_SCRIPT_VENDOR" \
         --jobs="$(nproc)" \
         --workspace_path="${VENDOR_WORKSHOP}" \
@@ -136,15 +136,39 @@ sync_vendor() {
     repo sync -j1 --fail-fast
 }
 
+copy_files_vendor() {
+
+    # Copy QSSI dir to VENDOR dir, excluding 'out' directory
+    rsync -a --exclude='out/' \
+        --exclude='.*/' --exclude='.*' \
+        "${QSSI_WORKSHOP}/" "${VENDOR_WORKSHOP}/"
+
+    mkdir -p "${VENDOR_WORKSHOP}/kernel_platform"
+
+    # Copy kernel_platform directory to VENDOR dir
+    rsync -a \
+        "${KERNEL_WORKSHOP}/kernel_platform/" \
+        "${VENDOR_WORKSHOP}/kernel_platform/"
+
+    mv "${VENDOR_WORKSHOP}/kernel_platform/out" "${VENDOR_WORKSHOP}/out"
+
+}
+
 build_vendor() {
     cd "${VENDOR_WORKSHOP}"
     
     source build/envsetup.sh
-    lunch qssi_xrM-userdebug
+    lunch niobe-userdebug
 
-    ./kernel_platform/build/android/prepare_vendor.sh qssi_xrM
-    bash build.sh -j"$(nproc)" dist --target_only BUILD_BROKEN_MISSING_REQUIRED_MODULES=true
+    ./kernel_platform/build/android/prepare_vendor.sh niobe gki
+    
+    bash build.sh -j"$(nproc)" dist --target_only
+    # BUILD_BROKEN_MISSING_REQUIRED_MODULES=true \
+    # BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES=true \
+    # ALLOW_MISSING_DEPENDENCIES=true \
+    # TARGET_USES_QCOM_GPTEE=false
 }
+
 
 # =======================================
 # Generate super.img
@@ -180,12 +204,14 @@ main() {
     sync_qssi
     build_qssi
     
-    # 4. Vendor: sync and build
+    # 4. Vendor: sync, copy files and build
     sync_vendor
+    copy_files_vendor
     build_vendor
     
     # 5. Generate image
     generate_super_image
 }
+
 
 main
