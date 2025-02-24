@@ -177,6 +177,10 @@ build_vendor() {
 generate_super_image() {
     cd "${VENDOR_WORKSHOP}"
     
+    source build/envsetup.sh
+    lunch niobe-userdebug
+    ./kernel_platform/build/android/prepare_vendor.sh niobe gki
+
     mkdir -p "${QSSI_WORKSHOP}/kernel_platform"
     
     rsync -a --progress  \
