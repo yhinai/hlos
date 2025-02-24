@@ -222,6 +222,8 @@ main() {
     copy_files_vendor
     build_vendor
     
+    exit 0
+    
     # 5. Generate image
     generate_super_image
 }
