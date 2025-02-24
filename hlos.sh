@@ -139,14 +139,14 @@ sync_vendor() {
 copy_files_vendor() {
 
     # Copy QSSI dir to VENDOR dir, excluding 'out' directory
-    rsync -a --exclude='out/' \
+    rsync -a --progress --exclude='out/' \
         --exclude='.*/' --exclude='.*' \
         "${QSSI_WORKSHOP}/" "${VENDOR_WORKSHOP}/"
 
     mkdir -p "${VENDOR_WORKSHOP}/kernel_platform"
 
     # Copy kernel_platform directory to VENDOR dir
-    rsync -a \
+    rsync -a --progress \
         "${KERNEL_WORKSHOP}/kernel_platform/" \
         "${VENDOR_WORKSHOP}/kernel_platform/"
 
@@ -177,12 +177,18 @@ build_vendor() {
 generate_super_image() {
     cd "${VENDOR_WORKSHOP}"
     
+    mkdir -p "${QSSI_WORKSHOP}/kernel_platform"
+    
+    rsync -a --progress  \
+        "${KERNEL_WORKSHOP}/kernel_platform/" \
+        "${QSSI_WORKSHOP}/kernel_platform/"
+
     python vendor/qcom/opensource/core-utils/build/build_image_standalone.py \
         --image super \
         --qssi_build_path "${QSSI_WORKSHOP}" \
         --target_build_path "${VENDOR_WORKSHOP}" \
         --merged_build_path "${VENDOR_WORKSHOP}" \
-        --target_lunch qssi_xrM \
+        --target_lunch niobe \
         --output_ota \
         --skip_qiifa
 }
