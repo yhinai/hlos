@@ -76,7 +76,7 @@ build_kernel() {
     export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
     export PATH=$JAVA_HOME/bin:$PATH
 
-    ./kernel_platform/build_with_bazel.py -t qssi_xrM ALL
+    ./kernel_platform/build_with_bazel.py -t niobe ALL
 }
 
 # =======================================
