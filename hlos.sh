@@ -138,19 +138,24 @@ sync_vendor() {
 
 copy_files_vendor() {
 
-    # Copy kernel_platform directory to QSSI dir
-    mkdir -p "${QSSI_WORKSHOP}/kernel_platform"
-    
-    rsync -a --progress \
-        "${KERNEL_WORKSHOP}/kernel_platform/" \
-        "${QSSI_WORKSHOP}/kernel_platform/"
+    # Copy QSSI dir contents to VENDOR dir
+    cp -r "${QSSI_WORKSHOP}/"* "${VENDOR_WORKSHOP}/"
 
-    # Copy QSSI dir to VENDOR dir, excluding 'out' directory
-    rsync -a --progress --exclude='out/' \
-        --exclude='.*/' --exclude='.*' \
-        "${QSSI_WORKSHOP}/" "${VENDOR_WORKSHOP}/"
+    # Copy kernel_platform dir to VENDOR dir
+    cp -r "${KERNEL_WORKSHOP}/kernel_platform/" "${VENDOR_WORKSHOP}/"
 
-    mv "${VENDOR_WORKSHOP}/kernel_platform/out" "${VENDOR_WORKSHOP}/out"
+    # Remove out dir from kernel_platform
+    rm -rf "${VENDOR_WORKSHOP}/kernel_platform/out"
+
+    # Create out dir in VENDOR dir
+    mkdir -p "${VENDOR_WORKSHOP}/out"
+
+    # Copy out dir contents from kernel_platform
+    cp -r "${KERNEL_DIR}/kernel_platform/out/"* "${VENDOR_WORKSHOP}/out/"
+
+    # Copy Android.mk file
+    cp "${VENDOR_DIR}/LINUX/android/vendor/qcom/proprietary/prebuilt_HY11/Android.mk" \
+    "${VENDOR_WORKSHOP}/vendor/qcom/proprietary/prebuilt_HY11/Android.mk"
 
 }
 
@@ -161,7 +166,7 @@ build_vendor() {
     lunch niobe-userdebug
 
     ./kernel_platform/build/android/prepare_vendor.sh niobe gki
-    
+    exit 0
     bash build.sh -j"$(nproc)" dist --target_only
     # BUILD_BROKEN_MISSING_REQUIRED_MODULES=true \
     # BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES=true \
@@ -187,8 +192,7 @@ generate_super_image() {
         --target_build_path "${VENDOR_WORKSHOP}" \
         --merged_build_path "${VENDOR_WORKSHOP}" \
         --target_lunch niobe \
-        --output_ota \
-        --skip_qiifa
+        --output_ota
 }
 
 # =======================================
@@ -221,6 +225,5 @@ main() {
     # # 5. Generate image
     # generate_super_image
 }
-
 
 main
