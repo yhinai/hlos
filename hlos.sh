@@ -181,12 +181,6 @@ generate_super_image() {
     lunch niobe-userdebug
     ./kernel_platform/build/android/prepare_vendor.sh niobe gki
 
-    mkdir -p "${QSSI_WORKSHOP}/kernel_platform"
-    
-    rsync -a --progress  \
-        "${KERNEL_WORKSHOP}/kernel_platform/" \
-        "${QSSI_WORKSHOP}/kernel_platform/"
-
     python vendor/qcom/opensource/core-utils/build/build_image_standalone.py \
         --image super \
         --qssi_build_path "${QSSI_WORKSHOP}" \
