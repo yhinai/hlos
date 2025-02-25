@@ -218,8 +218,8 @@ main() {
     
     exit 0
     
-    # 5. Generate image
-    generate_super_image
+    # # 5. Generate image
+    # generate_super_image
 }
 
 
