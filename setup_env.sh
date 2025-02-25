@@ -26,7 +26,7 @@ sudo apt-get install -y zip curl zlib1g-dev libc6-dev x11proto-core-dev libx11-d
 sudo apt-get install -y libgl1-mesa-dev g++-multilib tofrodos libxml2-utils xsltproc
 sudo apt-get install -y uuid-dev ninja-build scons python3-pip
 sudo apt-get install -y openjdk-11-jdk xmlstarlet repo pkg-config python3.12-dev
-sudo apt-get install -y libncurses5 libxml-simple-perl
+sudo apt-get install -y libncurses5 libxml-simple-perl golang-go
 
 # Setup Java environment
 echo "Setting up Java environment..."
