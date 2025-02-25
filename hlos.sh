@@ -135,14 +135,11 @@ sync_vendor() {
 
 copy_files_vendor() {
 
+    cp -r "${KERNEL_WORKSHOP}/kernel_platform/" "${QSSI_WORKSHOP}/"
+    rm -rf "${QSSI_WORKSHOP}/kernel_platform/out"
+
     # Copy QSSI dir contents to VENDOR dir
     cp -r "${QSSI_WORKSHOP}/"* "${VENDOR_WORKSHOP}/"
-
-    # Copy kernel_platform dir to VENDOR dir
-    cp -r "${KERNEL_WORKSHOP}/kernel_platform/" "${VENDOR_WORKSHOP}/"
-
-    # Remove out dir from kernel_platform
-    rm -rf "${VENDOR_WORKSHOP}/kernel_platform/out"
 
     # Create out dir in VENDOR dir
     mkdir -p "${VENDOR_WORKSHOP}/out"
