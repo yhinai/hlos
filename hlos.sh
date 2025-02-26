@@ -14,9 +14,9 @@ SYNC_SCRIPT_KERNEL="${KERNEL_DIR}/kernel_platform/sync_snap_v2.sh"
 SYNC_SCRIPT_QSSI="${QSSI_DIR}/LINUX/android/sync_snap_v2.sh"
 SYNC_SCRIPT_VENDOR="${VENDOR_DIR}/LINUX/android/sync_snap_v2.sh"
 
-KERNEL_WORKSHOP="${KERNEL_DIR}"
-QSSI_WORKSHOP="${QSSI_DIR}/LINUX/android"
-VENDOR_WORKSHOP="${VENDOR_DIR}/LINUX/android"
+KERNEL_WORKSHOP="${STANDARD_OEM_DIR}/KERNEL_WORKSPACE"
+QSSI_WORKSHOP="${STANDARD_OEM_DIR}/QSSI_WORKSPACE"
+VENDOR_WORKSHOP="${STANDARD_OEM_DIR}/VENDOR_WORKSPACE"
 
 # Configure git
 git config --global http.followRedirects true
@@ -135,18 +135,16 @@ sync_vendor() {
 
 copy_files_vendor() {
 
-    cp -r "${KERNEL_WORKSHOP}/kernel_platform/" "${QSSI_WORKSHOP}/"
-    rm -rf "${QSSI_WORKSHOP}/kernel_platform/out"
-
     # Copy QSSI dir contents to VENDOR dir
     cp -r "${QSSI_WORKSHOP}/"* "${VENDOR_WORKSHOP}/"
-
-    # Create out dir in VENDOR dir
+    rm -rf "${VENDOR_WORKSHOP}/out"
+    
+    cp -r "${KERNEL_WORKSHOP}/kernel_platform/" "${VENDOR_WORKSHOP}/"
+    rm -rf "${VENDOR_WORKSHOP}/kernel_platform/out"
+    
     mkdir -p "${VENDOR_WORKSHOP}/out"
-
-    # Copy out dir contents from kernel_platform
     cp -r "${KERNEL_DIR}/kernel_platform/out/"* "${VENDOR_WORKSHOP}/out/"
-
+    
     # Copy Android.mk file
     cp "${VENDOR_DIR}/LINUX/android/vendor/qcom/proprietary/prebuilt_HY11/Android.mk" \
     "${VENDOR_WORKSHOP}/vendor/qcom/proprietary/prebuilt_HY11/Android.mk"
