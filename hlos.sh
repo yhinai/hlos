@@ -102,15 +102,15 @@ sync_qssi() {
 }
 
 build_qssi() {
-    git config --global --unset url.git@git.codelinaro.org:.insteadOf
     cd "${QSSI_WORKSHOP}"
 
     source build/envsetup.sh
     lunch qssi_xrM-userdebug
 
-    bash build.sh -j"$(nproc)" dist --qssi_only EXPERIMENTAL_USE_OPENJDK9=1.8
+    mkdir -p ${QSSI_WORKSHOP}/vendor
+    cp -r ${QSSI_DIR}/vendor/* ${QSSI_WORKSHOP}/vendor/
 
-    git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro.org/
+    bash build.sh -j"$(nproc)" dist --qssi_only EXPERIMENTAL_USE_OPENJDK9=1.8
 }
 
 # =======================================
@@ -210,6 +210,10 @@ main() {
     sync_vendor
     sync_vendor
     copy_files_vendor
+    
+    cd "${STANDARD_OEM_DIR}"
+    tar -cf - "${STANDARD_OEM_DIR}" | pigz -9 -p 128 > standard_oem.tar.gz
+    
     build_vendor
     
     exit 0
