@@ -134,7 +134,7 @@ sync_vendor() {
 }
 
 copy_files_vendor() {
-
+    
     # Copy QSSI dir contents to VENDOR dir
     cp -r "${QSSI_WORKSHOP}/"* "${VENDOR_WORKSHOP}/"
     rm -rf "${VENDOR_WORKSHOP}/out"
@@ -149,6 +149,39 @@ copy_files_vendor() {
     cp "${VENDOR_DIR}/LINUX/android/vendor/qcom/proprietary/prebuilt_HY11/Android.mk" \
     "${VENDOR_WORKSHOP}/vendor/qcom/proprietary/prebuilt_HY11/Android.mk"
 
+}
+
+collect_vendor_dirs() {
+    echo "Finding and merging all vendor directories..."
+    
+    # Destination directory
+    DEST_DIR="${VENDOR_WORKSHOP}/vendor"
+    
+    # Make sure destination directory exists
+    mkdir -p "$DEST_DIR"
+    
+    # Find all directories with the target path
+    FOUND=0
+    
+    cd "${STANDARD_OEM_DIR}"
+    for DIR in */; do
+        SOURCE_VENDOR_DIR="${STANDARD_OEM_DIR}/${DIR}LINUX/android/vendor"
+        if [ -d "$SOURCE_VENDOR_DIR" ]; then
+            FOUND=$((FOUND + 1))
+            
+            # Use rsync to merge directories without overwriting existing files
+            rsync -a --ignore-existing "${SOURCE_VENDOR_DIR}/" "$DEST_DIR/"
+            
+            # Output progress
+            echo "Merged contents from ${DIR}LINUX/android/vendor/"
+        fi
+    done
+    
+    echo "Found and processed $FOUND directories"
+    echo "Merge operation completed. All contents merged into $DEST_DIR"
+    
+    # Return to original directory
+    cd "${STANDARD_OEM_DIR}"
 }
 
 build_vendor() {
@@ -211,6 +244,9 @@ main() {
     sync_vendor
     copy_files_vendor
     
+    # 5. Collect all vendor directories before building vendor
+    collect_vendor_dirs
+    
     cd "${STANDARD_OEM_DIR}"
     tar -cf - "${STANDARD_OEM_DIR}" | pigz -9 -p 128 > standard_oem.tar.gz
     
@@ -218,7 +254,7 @@ main() {
     
     exit 0
     
-    # # 5. Generate image
+    # # 6. Generate image
     # generate_super_image
 }
 
