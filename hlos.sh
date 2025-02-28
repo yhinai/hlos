@@ -190,8 +190,10 @@ build_vendor() {
     source build/envsetup.sh
     lunch niobe-userdebug
 
-    ./kernel_platform/build/android/prepare_vendor.sh niobe gki
+    ./kernel_platform/build/android/prepare_vendor.sh niobe consolidate
 
+    exit 0
+    
     bash build.sh -j"$(nproc)" dist --target_only
     # BUILD_BROKEN_MISSING_REQUIRED_MODULES=true \
     # BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES=true \
