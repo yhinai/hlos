@@ -64,6 +64,23 @@ echo 'export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' >> ~/.bashrc
 echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.bashrc
 ```
 
+### 3. [optional] LibXML2 Setup
+```bash
+cd ~
+wget https://download.gnome.org/sources/libxml2/2.12/libxml2-2.12.9.tar.xz
+tar -xvf libxml2-2.12.9.tar.xz
+cd libxml2-2.12.9/
+./configure --prefix=$(pwd)
+make
+make install
+
+# Set up library paths
+export LD_LIBRARY_PATH=~/libxml2-2.12.9/lib:$LD_LIBRARY_PATH
+export PKG_CONFIG_PATH=~/libxml2-2.12.9/lib/pkgconfig:$PKG_CONFIG_PATH
+echo 'export LD_LIBRARY_PATH=~/libxml2-2.12.9/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
+echo 'export PKG_CONFIG_PATH=~/libxml2-2.12.9/lib/pkgconfig:$PKG_CONFIG_PATH' >> ~/.bashrc
+```
+
 ## Build Process
 
 The build process consists of three main components:
