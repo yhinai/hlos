@@ -9,11 +9,8 @@ Before running the build system, ensure your environment meets all requirements 
 
 ## Quick Start
 
-1. Clone the repository:
+1. Set up the environment:
 ```bash
-git clone https://github.com/yhinai/hlos.git
-cd hlos
-
 # Set up the environment:
 chmod 777 setup_env.sh hlos.sh
 ./setup_env.sh
