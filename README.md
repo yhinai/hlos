@@ -50,7 +50,7 @@ sudo apt-get update
 sudo apt-get install -y openjdk-11-jdk xmlstarlet repo git-core gnupg flex bison gperf build-essential
 sudo apt-get install -y zip curl zlib1g-dev libc6-dev x11proto-core-dev libx11-dev
 sudo apt-get install -y libgl1-mesa-dev g++-multilib tofrodos libxml2-utils xsltproc
-sudo apt-get install -y uuid-dev ninja-build scons python3-pip
+sudo apt-get install -y uuid-dev ninja-build scons python3-pip pyhton2.7
 sudo apt-get install -y openjdk-11-jdk xmlstarlet repo pkg-config python3.12-dev
 sudo apt-get install -y libncurses5 libxml-simple-perl golang-go toybox xxd cgpt
 
