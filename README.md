@@ -67,6 +67,10 @@ cd ~
 sudo apt-get -y update
 sudo apt-get install -y python3.8 python3.8-dev
 
+export PYTHON_CFLAGS=$(python3.8-config --cflags)
+export PYTHON_LIBS=$(python3.8-config --libs)
+
+
 wget https://download.gnome.org/sources/libxml2/2.12/libxml2-2.12.9.tar.xz
 tar -xvf libxml2-2.12.9.tar.xz
 cd libxml2-2.12.9/
