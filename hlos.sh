@@ -233,16 +233,13 @@ main() {
 
     # 2. Kernel: sync and build
     sync_kernel
-    sync_kernel
     build_kernel
     
     # 3. QSSI: sync and build
     sync_qssi
-    sync_qssi
     build_qssi
     
     # 4. Vendor: sync, copy files and build
-    sync_vendor
     sync_vendor
     copy_files_vendor
     
