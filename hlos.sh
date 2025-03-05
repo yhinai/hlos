@@ -84,7 +84,6 @@ build_kernel() {
 # =======================================
 
 sync_qssi() {
-    git config --global --unset url.git@git.codelinaro.org:.insteadOf
     cd "${QSSI_WORKSHOP}"
     
     "$SYNC_SCRIPT_QSSI" \
@@ -98,7 +97,6 @@ sync_qssi() {
         --nhprop_chipcode_path="${STANDARD_OEM_DIR}"
 
     repo sync -j1 --fail-fast
-    git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro.org/    
 }
 
 build_qssi() {
@@ -191,8 +189,6 @@ build_vendor() {
     lunch niobe-userdebug
 
     ./kernel_platform/build/android/prepare_vendor.sh niobe consolidate
-
-    exit 0
     
     bash build.sh -j"$(nproc)" dist --target_only
     # BUILD_BROKEN_MISSING_REQUIRED_MODULES=true \
@@ -241,20 +237,11 @@ main() {
     
     # 4. Vendor: sync, copy files and build
     sync_vendor
-    copy_files_vendor
-    
-    # 5. Collect all vendor directories before building vendor
-    collect_vendor_dirs
-    
-    cd "${STANDARD_OEM_DIR}"
-    tar -cf - "${STANDARD_OEM_DIR}" | pigz -9 -p 128 > standard_oem.tar.gz
-    
+    copy_files_vendor    
     build_vendor
-    
-    exit 0
-    
-    # # 6. Generate image
-    # generate_super_image
+        
+    # 6. Generate image
+    generate_super_image
 }
 
 main
