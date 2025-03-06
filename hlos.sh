@@ -218,6 +218,21 @@ generate_super_image() {
         --output_ota
 }
 
+fix_video_xr_path() {
+    echo "Fixing VIDEO_XR.LA.1.0.r1 path in snap_release.xml..."
+
+    VENDOR_SNAP_RELEASE="${VENDOR_DIR}/LINUX/android/snap_release.xml"
+    VIDEO_XR_SNAP_RELEASE="${STANDARD_OEM_DIR}/VIDEO_XR.LA.1.0.r1/LINUX/android/snap_release.xml"
+    
+    sed -i 's/si_chipcode_path="VIDEO_XR.LA.1.0\/LINUX\/android"/si_chipcode_path="VIDEO_XR.LA.1.0.r1\/LINUX\/android"/g' "$VENDOR_SNAP_RELEASE"
+    sed -i 's/si_chipcode_path="VIDEO_XR.LA.1.0\/LINUX\/android"/si_chipcode_path="VIDEO_XR.LA.1.0.r1\/LINUX\/android"/g' "$VIDEO_XR_SNAP_RELEASE"
+
+    echo "Updated path in $VENDOR_SNAP_RELEASE"
+    echo "Updated path in $VIDEO_XR_SNAP_RELEASE"
+}
+
+
+
 # =======================================
 # Main Function
 # =======================================
@@ -226,6 +241,7 @@ main() {
     
     # 1. Download HLOS
     download_hlos
+    fix_video_xr_path
 
     # 2. Kernel: sync and build
     sync_kernel
