@@ -24,8 +24,8 @@ git config --global pack.threads "$(nproc)"
 git config --global url.git@git.codelinaro.org:.insteadOf https://git.codelinaro.org/
 
 # Set git user info
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
+git config --global user.name "Yahya Alhinai"
+git config --global user.email "alhinai@google.com"
 
 
 # =======================================
