@@ -106,7 +106,7 @@ build_qssi() {
     lunch qssi_xrM-userdebug
 
     mkdir -p ${QSSI_WORKSHOP}/vendor
-    cp -r ${QSSI_DIR}/vendor/* ${QSSI_WORKSHOP}/vendor/
+    cp -r ${QSSI_DIR}/LINUX/android/vendor/* ${QSSI_WORKSHOP}/vendor/
 
     bash build.sh -j"$(nproc)" dist --qssi_only EXPERIMENTAL_USE_OPENJDK9=1.8
 }
