@@ -44,9 +44,6 @@ download_hlos() {
     chmod +x "$SYNC_SCRIPT_QSSI"
     chmod +x "$SYNC_SCRIPT_VENDOR"
 
-    mkdir -p "$KERNEL_WORKSHOP"
-    mkdir -p "$QSSI_WORKSHOP"
-    mkdir -p "$VENDOR_WORKSHOP"
 }
 
 # =======================================
@@ -54,6 +51,7 @@ download_hlos() {
 # =======================================
 
 sync_kernel() {
+    mkdir -p "$KERNEL_WORKSHOP"
     cd "${KERNEL_WORKSHOP}"
     
     "$SYNC_SCRIPT_KERNEL" \
@@ -84,6 +82,7 @@ build_kernel() {
 # =======================================
 
 sync_qssi() {
+    mkdir -p "$QSSI_WORKSHOP"
     cd "${QSSI_WORKSHOP}"
     
     "$SYNC_SCRIPT_QSSI" \
@@ -116,6 +115,7 @@ build_qssi() {
 # =======================================
 
 sync_vendor() {
+    mkdir -p "$VENDOR_WORKSHOP"
     cd "${VENDOR_WORKSHOP}"
 
     "$SYNC_SCRIPT_VENDOR" \
@@ -149,39 +149,6 @@ copy_files_vendor() {
 
 }
 
-collect_vendor_dirs() {
-    echo "Finding and merging all vendor directories..."
-    
-    # Destination directory
-    DEST_DIR="${VENDOR_WORKSHOP}/vendor"
-    
-    # Make sure destination directory exists
-    mkdir -p "$DEST_DIR"
-    
-    # Find all directories with the target path
-    FOUND=0
-    
-    cd "${STANDARD_OEM_DIR}"
-    for DIR in */; do
-        SOURCE_VENDOR_DIR="${STANDARD_OEM_DIR}/${DIR}LINUX/android/vendor"
-        if [ -d "$SOURCE_VENDOR_DIR" ]; then
-            FOUND=$((FOUND + 1))
-            
-            # Use rsync to merge directories without overwriting existing files
-            rsync -a --ignore-existing "${SOURCE_VENDOR_DIR}/" "$DEST_DIR/"
-            
-            # Output progress
-            echo "Merged contents from ${DIR}LINUX/android/vendor/"
-        fi
-    done
-    
-    echo "Found and processed $FOUND directories"
-    echo "Merge operation completed. All contents merged into $DEST_DIR"
-    
-    # Return to original directory
-    cd "${STANDARD_OEM_DIR}"
-}
-
 build_vendor() {
     cd "${VENDOR_WORKSHOP}"
     
@@ -191,10 +158,7 @@ build_vendor() {
     ./kernel_platform/build/android/prepare_vendor.sh niobe consolidate
     
     bash build.sh -j"$(nproc)" dist --target_only
-    # BUILD_BROKEN_MISSING_REQUIRED_MODULES=true \
-    # BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES=true \
-    # ALLOW_MISSING_DEPENDENCIES=true \
-    # TARGET_USES_QCOM_GPTEE=false
+
 }
 
 
@@ -204,6 +168,8 @@ build_vendor() {
 
 generate_super_image() {
     cd "${VENDOR_WORKSHOP}"
+
+    sudo apt install -y python2.7
     
     source build/envsetup.sh
     lunch niobe-userdebug
