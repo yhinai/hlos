@@ -11,7 +11,6 @@ Before running the build system, ensure your environment meets all requirements 
 
 1. Set up the environment:
 ```bash
-# Set up the environment:
 chmod 777 setup_env.sh hlos.sh
 ./setup_env.sh
 source ~/.bashrc
