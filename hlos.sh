@@ -36,7 +36,8 @@ download_hlos() {
     # Check if directory already exists
     if [ ! -d "matrix-la-1-0_ap_standard_oem" ]; then
         echo "Downloading HLOS Chipcode..."
-        git clone --depth 1 https://qpm-git.qualcomm.com/home2/git/google-inc/matrix-la-1-0_ap_standard_oem.git
+        # git clone --depth 1 https://qpm-git.qualcomm.com/home2/git/google-inc/matrix-la-1-0_ap_standard_oem.git
+        git clone -b r00250.6 --depth 1 https://qpm-git.qualcomm.com/home2/git/google-inc/matrix-la-1-0_ap_standard_oem.git
     fi
 
     # Make sync scripts executable
