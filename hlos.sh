@@ -14,9 +14,9 @@ SYNC_SCRIPT_KERNEL="${KERNEL_DIR}/kernel_platform/sync_snap_v2.sh"
 SYNC_SCRIPT_QSSI="${QSSI_DIR}/LINUX/android/sync_snap_v2.sh"
 SYNC_SCRIPT_VENDOR="${VENDOR_DIR}/LINUX/android/sync_snap_v2.sh"
 
-KERNEL_WORKSHOP="${KERNEL_DIR}"
-QSSI_WORKSHOP="${QSSI_DIR}/LINUX/android"
-VENDOR_WORKSHOP="${VENDOR_DIR}/LINUX/android"
+export KERNEL_WORKSHOP="${STANDARD_OEM_DIR}/KERNEL_WORKSPACE"
+export QSSI_WORKSHOP="${STANDARD_OEM_DIR}/QSSI_WORKSPACE"
+export VENDOR_WORKSHOP="${STANDARD_OEM_DIR}/VENDOR_WORKSPACE"
 
 # Configure git
 git config --global http.followRedirects true
