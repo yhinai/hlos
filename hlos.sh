@@ -173,7 +173,7 @@ generate_super_image() {
     
     source build/envsetup.sh
     lunch niobe-userdebug
-    ./kernel_platform/build/android/prepare_vendor.sh niobe gki
+    ./kernel_platform/build/android/prepare_vendor.sh niobe consolidate
 
     python vendor/qcom/opensource/core-utils/build/build_image_standalone.py \
         --image super \
