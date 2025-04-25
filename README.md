@@ -1,7 +1,12 @@
 # HLOS Build System
 
-A comprehensive build system for High-Level Operating System (HLOS).
+This repository contains a comprehensive build system for High-Level Operating System (HLOS) development. It automates the complete build pipeline for mobile/embedded platforms with three main components:
 
+1. **Kernel Build** - Builds the kernel platform using Bazel
+2. **QSSI Build** - Builds the Qualcomm System Software Implementation components
+3. **Vendor Build** - Builds vendor-specific components and generates the final system image
+
+The system handles environment setup, dependency installation, code synchronization, and compilation across all components. It's designed for Qualcomm-based platforms and includes scripts to manage the entire workflow from environment configuration to final OS image.
 
 ## Prerequisites
 
